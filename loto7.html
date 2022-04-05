@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTO7</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            margin-top: 10vh;
+            background-color: #8ecae6;
+            color: #023047;
+        }
+        span{
+            margin: 10px;
+            padding: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            background-color: #FFE303;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        #number{
+            margin: 10px;
+            padding: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background-color: #FFE303;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        button{
+            margin: 15px;
+            border-radius: 10px;
+            font-size: 30px;
+            background-color: #219EBC;
+            border: 2px solid #219EBC;
+            transition-duration: 0.1s;
+            color: #FFF;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color: #DCF3F9;
+            color: #000;
+        }
+        button:active{
+            background-color: #CAEDF6;
+        }
+        p{
+            font-size: 24px;
+        }
+        h1{
+            margin: 40px;
+        }
+        #finish{
+            margin: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #d00000;
+        }
+        #area{
+            width: 900px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            background-color: #DCF3F9;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <P><b>LOTO7 玩法：</b>1~37中選七個數字，玩家號碼與開獎號碼皆相同為中了頭獎</P>
+    <div id="area">
+        <br>
+        <button>開始產生號碼</button>
+        <div id="number"></div>
+        <h1>開獎號碼</h1>
+        <div id="result"></div>
+        <div id="sort"></div>
+        <div id="finish"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script>
+        $(function(){
+        max = 37;
+        bingo = new Array();
+        for(i = 1; i <= max; i++) {
+            bingo.push(i);
+        }
+        status = 0; //作為判斷用
+        lastBall = 0; //最後一顆球
+        result = 0;
+        
+        //當button被觸發時
+        $("button").click(function(){
+            if(status == 0) {
+                status = 1;
+                $("button").text("產生開獎號"); //改變button文字
+                roulette = setInterval(function(){
+                    //產生正整數亂數
+                    random = Math.floor(Math.random() * bingo.length); //Math.floor 傳整數 | Math.random 傳0~1之間的數 | array.length 陣列長度
+                    //讓number等於bingo陣列中上面取得的亂數數值
+                    number = bingo[random];
+                    //讓亂數放在#number並寫出來
+                    if (number <= 9){
+                        $("#number").text("0"+number);
+                    }else{
+                        $("#number").text(number);
+                    };
+                }, 75); //控制產生亂數時間
+            } else {
+                status = 0;
+                $("button").text("開獎下一號"); //改變button文字
+                clearInterval(roulette); //取消亂數
+                random = Math.floor(Math.random() * bingo.length);
+                result = bingo[random];
+                bingo.splice(random, 1); //splice(被刪除的引索值,刪除1個數)刪除陣列中的數字
+                if (result <= 9){
+                    $("#number").text("0"+result); //讓亂數放在#number並寫出來
+                    $("#result").append("<span>0" + result + "</span>"); //讓亂數放在#result並寫出來
+                }else{
+                    $("#number").text(result); //讓亂數放在#number並寫出來
+                    $("#result").append("<span>" + result + "</span>"); //讓亂數放在#result並寫出來
+                };
+                lastBall = lastBall+1;
+                allBall = new Array();
+                allBall = result;
+                //產生第7顆球後
+                if (lastBall == 7){
+                    $("button").text("重新產生開獎號碼");
+                    // window.alert("已開獎完畢");
+                    $("#finish").append("本次已開獎完畢");
+                    $("button").click(function(){
+                        location=location;
+                    });
+                };
+            };
+        });
+        });
+    </script>
+
+</body>
+</html>
